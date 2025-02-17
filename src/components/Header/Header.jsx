@@ -1,5 +1,7 @@
 
-import { Navbar, Nav, Button,Container } from 'react-bootstrap';
+import { Navbar, Nav, Container } from 'react-bootstrap';
+import Cart from '../Cart/Cart';
+import { CartDisplay } from '../../store/cart-display-context';
 
 const Header = () => {
     return (
@@ -13,8 +15,10 @@ const Header = () => {
             <Nav.Link href="#link">Store</Nav.Link>
             <Nav.Link href="#link">About</Nav.Link>
           </Nav>
-          <Button>Cart <span>0</span></Button>
-       
+          <CartDisplay>
+      <Cart />
+      {/* Other components that might need access to the cart display */}
+    </CartDisplay>
       </Container>
     </Navbar>
     );
