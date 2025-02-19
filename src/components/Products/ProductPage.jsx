@@ -37,7 +37,7 @@ const ProductPage = () => {
     <Container>
       <Row>
         {productsArr.map((item) => (
-          <Col key={item.id} className="mb-4">
+          <Col key={item.id} className="mb-4 mt-4">
             <Card style={{ width: '100%' }}>
               <Card.Img variant="top" src={item.imageUrl} alt={item.title} />
               <Card.Body>

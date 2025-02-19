@@ -1,18 +1,32 @@
-import React from 'react';
-import Footer from './components/Footer/Footer';
-import Header from './components/Header/Header';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
 import ProductPage from './components/Products/ProductPage';
 import { CartProvider } from './store/cart-context';
 import { CartDisplay } from './store/cart-display-context';
-import './App.css'; // Assuming you have some global styles
+import Home from './pages/Home';
+import About from './pages/About';
+import RootLayout from './components/Layout/RootLayout';
+
+// Create the router object
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />, // The root layout
+    children: [
+      { path: '/', element: <ProductPage /> },  // Default route, show ProductPage
+      { path: '/home', element: <Home /> },     
+      { path: '/about', element: <About /> },   
+    ],
+  },
+]);
+
 
 function App() {
   return (
     <CartProvider>
       <CartDisplay>
-        <Header />
-        <ProductPage />
-        <Footer />
+        {/* Provide the router to the app */}
+        <RouterProvider router={router} />
       </CartDisplay>
     </CartProvider>
   );

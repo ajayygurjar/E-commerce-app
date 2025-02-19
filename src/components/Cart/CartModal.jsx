@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
 
 import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
 import CartItem from './CartItem';
+
 
 const CartModal = ({ cartDisplay, toggleCartVisibility, cartItems, removeCartItem }) => {
   return (
