@@ -10,26 +10,30 @@ export const CartProvider = ({ children }) => {
   const [numberOfItems, setNumberOfItems] = useState(0);
 
   // Add item to the cart
-  const addCartItem = (item) => {
-    setCartItems((prevItems) => {
-      // Check if the item already exists in the cart
-      const existingItem = prevItems.find(cartItem => cartItem.id === item.id);
+const addCartItem = (item) => {
+  setCartItems((prevItems) => {
+    let updatedCart = [...prevItems];
+    
+    // Try to find the item in the cart
+    const existingItem = updatedCart.find(cartItem => cartItem.id === item.id);
 
-      // If the item exists, update its quantity, otherwise, add it
-      const updatedCart = existingItem
-        ? prevItems.map((cartItem) =>
-            cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + item.quantity } : cartItem
-          )
-        : [...prevItems, { ...item, quantity: item.quantity }];
+    if (existingItem) {
+      // If the item exists, update its quantity
+      existingItem.quantity += 1;
+    } else {
+      // If the item doesn't exist, add it to the cart with initial quantity of 1
+      updatedCart.push({ ...item, quantity: 1 });
+    }
 
-      
-        
-      const newTotalItems = updatedCart.reduce((total, currentItem) => total + currentItem.quantity, 0);
-      setNumberOfItems(newTotalItems);
+    // Calculate the new total number of items
+    const newTotalItems = updatedCart.reduce((total, currentItem) => total + currentItem.quantity, 0);
+    setNumberOfItems(newTotalItems);
 
-      return updatedCart;
-    });
-  };
+    return updatedCart;
+  });
+};
+
+  
 
   // Remove item from the cart
   const removeCartItem = (id) => {
