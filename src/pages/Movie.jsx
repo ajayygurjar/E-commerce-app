@@ -30,18 +30,23 @@ const Movie = () => {
 
   return (
     <>
-      <button type="button" onClick={fetchMovie}>Fetch Movie</button>
-      
-      {/* Show loader when isLoading is true */}
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <ul>
-          {movies.map((movie, index) => (
-            <li key={index}>{movie.name}</li> 
-          ))}
-        </ul>
-      )}
+      <section>
+        <button type="button" onClick={fetchMovie}>Fetch Movies</button>
+      </section>
+
+      <section>
+        {isLoading && <p>Loading ...</p>}
+        
+        {!isLoading && movies.length > 0 && (
+          <ul>
+            {movies.map((movie, index) => (
+              <li key={index}>{movie.name}</li> 
+            ))}
+          </ul>
+        )}
+
+        {!isLoading && movies.length === 0 && <p>No Movies Found</p>}
+      </section>
     </>
   );
 };
