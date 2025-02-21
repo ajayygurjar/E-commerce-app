@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const Movie = () => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function fetchMovie() {
+  const fetchMovie = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -36,7 +36,11 @@ const Movie = () => {
     }
 
     setIsLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    fetchMovie();
+  }, [fetchMovie]); // This ensures fetchMovie is called once when the component mounts
 
   let content = <p>Found no movies</p>;
 
