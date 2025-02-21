@@ -1,9 +1,24 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, useCallback } from "react";
+import AddMovie from "./AddMovies";
+
 
 const Movie = () => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [addMov,setAddMov]=useState(false)
+
+
+
+const addForm=()=>{
+  setAddMov((prev)=>!prev)
+}
+
+const addMovieHandler = (newMovie) => {
+  setMovies((prevMovies) => [...prevMovies, newMovie]);
+};
+
 
   const fetchMovie = useCallback(async () => {
     setIsLoading(true);
@@ -64,6 +79,15 @@ const Movie = () => {
 
   return (
     <>
+     <section>
+        {addMov ? (
+          <AddMovie onAddMovie={addMovieHandler} />
+        ) : (
+          <button type="button" onClick={addForm}>
+            Add Movie
+          </button>
+        )}
+      </section>
       <section>
         <button type="button" onClick={fetchMovie}>Fetch Movies</button>
       </section>
