@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const Movie = () => {
   const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   async function fetchMovie() {
@@ -10,22 +10,20 @@ const Movie = () => {
     setError(null);
 
     try {
-      const response = await fetch('https://swapi.dev/api/people/1/');
+      const response = await fetch('https://swapi.dev/api/people/1');
 
-      // always do this before paresing data 
       if (!response.ok) {
         throw new Error('Something Went Wrong!');
       }
 
-
       const data = await response.json();
-      
+
       const moviePromises = data.films.map(async (filmUrl) => {
         const filmResponse = await fetch(filmUrl);
         const filmData = await filmResponse.json();
         return {
           id: filmData.episode_id,
-          name: filmData.title, 
+          name: filmData.title,
         };
       });
 
@@ -34,10 +32,30 @@ const Movie = () => {
       setMovies(moviesData);
 
     } catch (error) {
-      setError(error.message);
+      setError('Something Went Wrong!');
     }
 
-    setIsLoading(false); 
+    setIsLoading(false);
+  }
+
+  let content = <p>Found no movies</p>;
+
+  if (movies.length > 0) {
+    content = (
+      <ul>
+        {movies.map((movie, index) => (
+          <li key={index}>{movie.name}</li>
+        ))}
+      </ul>
+    );
+  }
+
+  if (error) {
+    content = <p>{error}</p>;
+  }
+
+  if (isLoading) {
+    content = <p>Loading...</p>;
   }
 
   return (
@@ -47,19 +65,7 @@ const Movie = () => {
       </section>
 
       <section>
-        {error && <p>{error}</p>}
-
-        {!isLoading && movies.length > 0 && !error && (
-          <ul>
-            {movies.map((movie, index) => (
-              <li key={index}>{movie.name}</li> 
-            ))}
-          </ul>
-        )}
-
-        {!isLoading && movies.length === 0 && <p>No Movies Found</p>}
-        
-        {isLoading && <p>Loading ...</p>}
+        {content}
       </section>
     </>
   );
