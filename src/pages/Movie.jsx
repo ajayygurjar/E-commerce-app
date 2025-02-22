@@ -2,50 +2,85 @@
 import { useState, useEffect, useCallback } from "react";
 import AddMovie from "./AddMovies";
 
-
 const Movie = () => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [addMov,setAddMov]=useState(false)
+  const [addMov, setAddMov] = useState(false);
 
+  const addForm = () => {
+    setAddMov((prev) => !prev);
+  };
 
+  // Delete handler to remove the movie from Firebase
+  const deleteHandler = async (id) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://react-http-ffc12-default-rtdb.firebaseio.com/movies/${id}.json`,
+        {
+          method: 'DELETE',
+        }
+      );
 
-const addForm=()=>{
-  setAddMov((prev)=>!prev)
-}
+      if (!response.ok) {
+        throw new Error('Failed to delete movie');
+      }
 
-const addMovieHandler = (newMovie) => {
-  setMovies((prevMovies) => [...prevMovies, newMovie]);
-};
+      // Remove the deleted movie from the state to update the UI
+      setMovies((prevMovies) => prevMovies.filter((movie) => movie.id !== id));
 
+    } catch (error) {
+      setError('Something Went Wrong! Could not delete movie');
+    } finally {
+      setIsLoading(false);  // Ensure loading state is turned off
+    }
+  };
 
-  const fetchMovie = useCallback(async () => {
+  // Add movie handler to send a POST request to Firebase
+  const addMovieHandler = async (movie) => {
+    const response = await fetch('https://react-http-ffc12-default-rtdb.firebaseio.com/movies.json', {
+      method: 'POST',
+      body: JSON.stringify(movie),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add movie');
+    }
+
+    const data = await response.json();
+    console.log(data);
+    fetchMovies(); // Refresh the movie list after adding a new movie
+  };
+
+  // Fetch movies from Firebase
+  const fetchMovies = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('https://swapi.dev/api/people/1');
+      const response = await fetch('https://react-http-ffc12-default-rtdb.firebaseio.com/movies.json');
 
       if (!response.ok) {
         throw new Error('Something Went Wrong!');
       }
 
       const data = await response.json();
+      const loadedMovies = [];
 
-      const moviePromises = data.films.map(async (filmUrl) => {
-        const filmResponse = await fetch(filmUrl);
-        const filmData = await filmResponse.json();
-        return {
-          id: filmData.episode_id,
-          name: filmData.title,
-        };
-      });
+      for (const key in data) {
+        loadedMovies.push({
+          id: key,
+          title: data[key].title,
+          openingText: data[key].openingText,
+          date: data[key].releaseDate,
+        });
+      }
 
-      const moviesData = await Promise.all(moviePromises);
-
-      setMovies(moviesData);
-
+      setMovies(loadedMovies);
     } catch (error) {
       setError('Something Went Wrong!');
     }
@@ -53,17 +88,24 @@ const addMovieHandler = (newMovie) => {
     setIsLoading(false);
   }, []);
 
+  // Call fetchMovies when the component mounts
   useEffect(() => {
-    fetchMovie();
-  }, [fetchMovie]); // This ensures fetchMovie is called once when the component mounts
+    fetchMovies();
+  }, [fetchMovies]);
 
+  // Display content based on movies data, loading, or error state
   let content = <p>Found no movies</p>;
 
   if (movies.length > 0) {
     content = (
       <ul>
-        {movies.map((movie, index) => (
-          <li key={index}>{movie.name}</li>
+        {movies.map((movie) => (
+          <li key={movie.id}>
+            <span>Title: {movie.title}</span><br />
+            <span>Opening Text: {movie.openingText} </span>
+            <span>Release Date: {movie.date}</span>
+            <button onClick={() => deleteHandler(movie.id)}>Delete</button>
+          </li>
         ))}
       </ul>
     );
@@ -79,7 +121,7 @@ const addMovieHandler = (newMovie) => {
 
   return (
     <>
-     <section>
+      <section>
         {addMov ? (
           <AddMovie onAddMovie={addMovieHandler} />
         ) : (
@@ -89,9 +131,8 @@ const addMovieHandler = (newMovie) => {
         )}
       </section>
       <section>
-        <button type="button" onClick={fetchMovie}>Fetch Movies</button>
+        <button type="button" onClick={fetchMovies}>Fetch Movies</button>
       </section>
-
       <section>
         {content}
       </section>

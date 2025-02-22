@@ -5,17 +5,33 @@ const AddMovie = ({ onAddMovie }) => {
   const [title, setTitle] = useState("");
   const [openingText, setOpeningText] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
+  const [isFormValid, setIsFormValid] = useState(true); 
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
+
+    // Simple validation 
+    if (!title || !openingText || !releaseDate) {
+      setIsFormValid(false); // Set form as invalid if any field is missing
+      return;
+    }
 
     const newMovieObj = {
       title,
       openingText,
       releaseDate,
     };
-    console.log(newMovieObj);
-    onAddMovie(newMovieObj); // Call the function to pass the movie data
+    
+    await onAddMovie(newMovieObj); // Pass movie data to parent
+    resetForm(); 
+    
+  };
+
+  const resetForm = () => {
+    setTitle("");
+    setOpeningText("");
+    setReleaseDate("");
+    setIsFormValid(true); 
   };
 
   return (
@@ -48,6 +64,8 @@ const AddMovie = ({ onAddMovie }) => {
           onChange={(e) => setReleaseDate(e.target.value)}
         />
       </div>
+      {!isFormValid && <p style={{ color: 'red' }}>Please fill all the fields!</p>} 
+
       <div className="buttons">
         <button type="submit">Add Movie</button>
       </div>
