@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import RootLayout from './components/Layout/RootLayout';
 import Movie from './pages/Movie';
+import Contact from './pages/Contact';
 
 // Create the router object
 const router = createBrowserRouter([
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
       { path: '/', element: <ProductPage /> },  // Default route, show ProductPage
       { path: '/home', element: <Home /> },     
       { path: '/about', element: <About /> },  
-      {path:'/movie',element:<Movie/>} 
+      {path:'/movie',element:<Movie/>},
+      {path:'/contact',element:<Contact/>}
     ],
   },
 ]);
