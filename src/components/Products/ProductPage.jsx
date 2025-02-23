@@ -1,6 +1,9 @@
 import { useContext } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { CartContext } from '../../store/cart-context';
+import { Link } from 'react-router-dom'; 
+
+
 
 // Define the products array
 const productsArr = [
@@ -45,6 +48,9 @@ const ProductPage = () => {
                 <div>
                   <span>${item.price}</span>
                 </div>
+                <Link to={`/product/${item.id}`}>
+                <Button variant='primary'>View Product</Button>
+                </Link>
                 <Button
                   variant="primary"
                   type="button"
