@@ -10,6 +10,7 @@ import RootLayout from './components/Layout/RootLayout';
 import Movie from './pages/Movie';
 import Contact from './pages/Contact';
 import ProductDetailPage from './components/Products/ProductDetailPage';
+import LoginPage from './pages/LoginPage';
 
 // Create the router object
 const router = createBrowserRouter([
@@ -22,7 +23,8 @@ const router = createBrowserRouter([
       { path: '/home', element: <Home /> },     
       { path: '/about', element: <About /> },  
       {path:'/movie',element:<Movie/>},
-      {path:'/contact',element:<Contact/>}
+      {path:'/contact',element:<Contact/>},
+      {path:'/login' ,element:<LoginPage/>},//Login Page
     ],
   },
 ]);
