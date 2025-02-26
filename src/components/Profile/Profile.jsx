@@ -1,10 +1,13 @@
 import { useRef,useContext } from 'react';
 import classes from './Profile.module.css';
+import { useNavigate } from 'react-router-dom';
 
 import AuthContext from '../../store/auth-context';
 
 
 const Profile = () => {
+
+  const navigate=useNavigate();
 const authCtx= useContext(AuthContext);
 
 
@@ -28,6 +31,7 @@ const submitHandler=(event)=>{
   }).then((res)=>{
     //assumption: Always succeeds!
     console.log(res.status)
+    navigate('/login')
 
   })
 

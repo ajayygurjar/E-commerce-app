@@ -1,7 +1,7 @@
 
 
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { Link } from 'react-router-dom';  // Import Link for routing
+import { Link,useNavigate } from 'react-router-dom';  // Import Link for routing
 import Cart from '../Cart/Cart';
 import { useContext } from 'react';
 import AuthContext from '../../store/auth-context';
@@ -11,6 +11,14 @@ const Header = () => {
 
 
   const authCtx=useContext(AuthContext);
+
+  const navigate=useNavigate();
+
+  const logoutHandler=()=>{
+    authCtx.logout();
+    navigate('/login')
+
+  }
 
 
   
@@ -28,6 +36,8 @@ const Header = () => {
           <Nav.Link as={Link} to="/about">About</Nav.Link>
           <Nav.Link as={Link} to="/contact">Contact Us</Nav.Link>
 					{/*<Nav.Link as={Link} to="/movie">Movie</Nav.Link>*/}
+
+          {authCtx.isLoggedIn && <button type='button' onClick={logoutHandler}>logout</button>}
           
 
             

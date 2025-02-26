@@ -1,8 +1,11 @@
 import { useState, useRef,useContext } from 'react';
+import {useNavigate} from 'react-router-dom'
 import classes from './AuthForm.module.css';
 import AuthContext from '../../store/auth-context';
 
 const AuthForm = () => {
+
+  const navigate=useNavigate()
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
@@ -35,11 +38,11 @@ const AuthForm = () => {
       method: 'POST',
       body: JSON.stringify({
         email: enteredEmail,
-        password: enteredPassword, // Corrected field name
+        password: enteredPassword, 
         returnSecureToken: true
       }),
       headers: {
-        'Content-Type': 'application/json' // Corrected header name
+        'Content-Type': 'application/json' 
       }
     }).then(res => {
       setIsLoading(false);
@@ -49,14 +52,14 @@ const AuthForm = () => {
         return res.json().then(() => {
           let errorMessage = 'Authentication Failed!';
           // if(data && data.error &&data.error.message){
-          // errorMessage=data.error.message;
-          //   }
+          // errorMessage=data.error.message; }
           alert(errorMessage);
           throw new Error(errorMessage);
         });
       }
     }).then((data) => {
       authCtx.login(data.idToken)
+      navigate('/login')
     })
     .catch((err) => {
       alert(err.message);
