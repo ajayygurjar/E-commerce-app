@@ -1,5 +1,5 @@
 
-import React,{ useState } from "react"
+import React,{ useState,useEffect } from "react"
 
 const AuthContext=React.createContext({
 token:'',
@@ -17,13 +17,20 @@ export const AuthContextProvider=(props)=>{
 
     const loginHandler=(token)=>{
         setToken(token);
+        localStorage.setItem('token',token)
 
     }
 
 
     const logoutHandler=()=>{
         setToken(null);
+        localStorage.removeItem('token')
     }
+
+
+    useEffect(()=>{
+        localStorage.getItem('token');
+    })
 
     //Created object which contains state and function to global context provider
 
