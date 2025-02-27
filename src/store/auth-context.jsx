@@ -12,8 +12,9 @@ logout:()=>{}
 
 
 export const AuthContextProvider=(props)=>{
+    const initialToken=localStorage.getItem('token')
     
-    const [token,setToken]=useState(null);
+    const [token,setToken]=useState(initialToken);
 
 
     const userIsLoggedIn=!!token;
@@ -33,9 +34,7 @@ export const AuthContextProvider=(props)=>{
     }
 
 
-    useEffect(()=>{
-        localStorage.getItem('token');
-    })
+
 
     //Created object which contains state and function to global context provider
 
