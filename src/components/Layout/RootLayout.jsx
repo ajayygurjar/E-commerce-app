@@ -1,5 +1,5 @@
 
-import { Outlet } from 'react-router-dom'; // Import the Outlet for rendering nested routes
+import { Outlet } from 'react-router-dom'; 
 import Header from './Header';
 import Footer from './Footer';
 
@@ -10,7 +10,7 @@ function RootLayout() {
       <Header />
 
       <main>
-        {/* Outlet renders the nested components like ProductPage, Home, About */}
+       {/* This is where child routes will be rendered */}
         <Outlet />
       </main>
 

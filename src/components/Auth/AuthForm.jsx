@@ -59,7 +59,7 @@ const AuthForm = () => {
       }
     }).then((data) => {
       authCtx.login(data.idToken)
-      navigate('/login')
+      navigate('/store')
     })
     .catch((err) => {
       alert(err.message);

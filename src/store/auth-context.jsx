@@ -29,9 +29,18 @@ export const AuthContextProvider=(props)=>{
     const logoutHandler=()=>{
         setToken(null);
         localStorage.removeItem('token')
-        
-        
     }
+
+    useEffect(()=>{
+        if(userIsLoggedIn){
+            const timer=setTimeout(()=>{
+                logoutHandler();
+            },300000);
+            return ()=>{
+                clearTimeout(timer)
+            }
+        }
+    },[userIsLoggedIn])
 
 
 
