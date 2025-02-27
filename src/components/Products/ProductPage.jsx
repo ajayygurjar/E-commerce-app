@@ -49,11 +49,12 @@ const ProductPage = () => {
                   <span>${item.price}</span>
                 </div>
                 <Link to={`/product/${item.id}`}>
-                <Button variant='primary'>View Product</Button>
+                <Button variant='warning' size='sm'>View Product</Button>
                 </Link>
                 <Button
                   variant="primary"
                   type="button"
+                  size='sm'
                   onClick={() => addCartItem({ ...item, quantity: 1 })}
                 >
                   Add to Cart

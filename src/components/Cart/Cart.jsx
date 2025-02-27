@@ -6,13 +6,13 @@ import useCartDisplay from '../../store/cart-display-context';
 import CartModal from './CartModal';
 
 const Cart = () => {
-  const { cartItems, removeCartItem } = useContext(CartContext);
+  const { cartItems, removeCartItem,numberOfItems } = useContext(CartContext);
   const { cartDisplay, toggleCartVisibility } = useCartDisplay();
 
   return (
     <>
-      <Button variant="primary" onClick={() => toggleCartVisibility(!cartDisplay)}>
-        Cart
+      <Button variant="outline-secondary" onClick={() => toggleCartVisibility(!cartDisplay)}>
+        Cart <span>{numberOfItems}</span>
       </Button>
 
       <CartModal
