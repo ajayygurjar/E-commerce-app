@@ -55,7 +55,7 @@ const Header = () => {
             </button>
           )}
         </Nav>
-        <Cart />
+        {authCtx.isLoggedIn && <Cart />}
       </Container>
     </Navbar>
   );
