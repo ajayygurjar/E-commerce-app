@@ -58,8 +58,8 @@ const AuthForm = () => {
         });
       }
     }).then((data) => {
-      authCtx.login(data.idToken)
-      navigate('/store')
+      authCtx.login(data.idToken,data.email)
+      navigate('/store',{replace:true})
     })
     .catch((err) => {
       alert(err.message);

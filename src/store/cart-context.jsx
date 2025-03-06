@@ -1,91 +1,97 @@
 /* eslint-disable react/prop-types */
-import  { createContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import AuthContext from './auth-context';
+import axios from 'axios';
 
 export const CartContext = createContext();
 
+const API_URL = `https://crudcrud.com/api/b043858422b64f0582adeee615123825/cart`;
+
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  const [numberOfItems, setNumberOfItems] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const { isLoggedIn, userMail } = useContext(AuthContext);
 
-  const addCartItem = (item) => {
-    setCartItems((prevItems) => {
-      const updatedCart = [...prevItems];
-      const existingItemIndex = updatedCart.findIndex(cartItem => cartItem.id === item.id);
+  const addCartItem = async (item) => {
+    const cleanMail = await userMail.replace(/[@.]/g, '');  
+    const cartURL = `${API_URL}${cleanMail}`;
 
-      if (existingItemIndex !== -1) {
-        const updatedItem = {
-          ...updatedCart[existingItemIndex],
-          quantity: updatedCart[existingItemIndex].quantity + 1,
-        };
-        updatedCart[existingItemIndex] = updatedItem; 
+    try {
+      const getItemResponse = await axios.get(cartURL);
+      const updateItem = getItemResponse.data.find((data) => data.id === item.id);
+
+      if (updateItem) {
+        const putItemResponse = await axios.put(`${cartURL}/${updateItem._id}`, {
+          ...item,
+          quantity: updateItem.quantity + item.quantity,
+        });
+
+        console.log(putItemResponse.statusText, 'Item Update Success');
+        setCartItems((prevCart) =>
+          prevCart.map((prevItem) =>
+            prevItem.id === updateItem.id
+              ? { ...prevItem, quantity: prevItem.quantity + item.quantity }
+              : prevItem
+          )
+        );
       } else {
-        updatedCart.push({ ...item, quantity: 1 });
+        const postItemResponse = await axios.post(cartURL, item);
+        console.log(postItemResponse.data, postItemResponse.status, 'Item POST Success');
+        setCartItems((prevCart) => [...prevCart, postItemResponse.data]);
       }
 
-      const newTotalItems = updatedCart.reduce((total, currentItem) => total + currentItem.quantity, 0);
-      const newTotalAmount = updatedCart.reduce((total, currentItem) => total + currentItem.price * currentItem.quantity, 0);
-
-      setNumberOfItems(newTotalItems);
-      setTotalAmount(newTotalAmount);
-
-      return updatedCart;
-    });
+      setTotalAmount((prevTotal) => prevTotal + item.quantity * item.price);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const removeCartItem = (id) => {
-    setCartItems((prevItems) => {
-      const updatedCart = prevItems.filter(item => item.id !== id);
-      const newTotalItems = updatedCart.reduce((total, currentItem) => total + currentItem.quantity, 0);
-      const newTotalAmount = updatedCart.reduce((total, currentItem) => total + currentItem.price * currentItem.quantity, 0);
+  useEffect(() => {
+    if (isLoggedIn && userMail) {
+      const fetchCart = async () => {
+        const cleanMail = await userMail.replace(/[@.]/g, '');
+        const cartURL = `${API_URL}${cleanMail}`;
 
-      setNumberOfItems(newTotalItems);
-      setTotalAmount(newTotalAmount);
+        try {
+          const getItemResponse = await axios.get(cartURL);
+          setCartItems(getItemResponse.data);
 
-      return updatedCart;
-    });
-  };
-
-  const increaseQuantity = (id) => {
-    setCartItems((prevItems) => {
-      const updatedCart = prevItems.map(item => {
-        if (item.id === id) {
-          return { ...item, quantity: item.quantity + 1 };
+          setTotalAmount(
+            getItemResponse.data.reduce((acc, curr) => acc + curr.quantity * curr.price, 0)
+          );
+        } catch (error) {
+          console.error('Error fetching cart:', error);
         }
-        return item;
+      };
+
+      fetchCart();
+    }
+  }, [userMail, isLoggedIn]);
+
+  const removeCartItem = async (id) => {
+    const cleanMail = await userMail.replace(/[@.]/g, '');  
+    const cartURL = `${API_URL}${cleanMail}`;
+
+    try {
+      const itemToRemove = cartItems.find((item) => item.id === id);
+      if (itemToRemove) {
+        await axios.delete(`${cartURL}/${itemToRemove._id}`);
+      }
+
+      setCartItems((prevItems) => {
+        const updatedCart = prevItems.filter((item) => item.id !== id);
+        setTotalAmount(
+          updatedCart.reduce((total, currentItem) => total + currentItem.price * currentItem.quantity, 0)
+        );
+        return updatedCart;
       });
-
-      const newTotalItems = updatedCart.reduce((total, currentItem) => total + currentItem.quantity, 0);
-      const newTotalAmount = updatedCart.reduce((total, currentItem) => total + currentItem.price * currentItem.quantity, 0);
-
-      setNumberOfItems(newTotalItems);
-      setTotalAmount(newTotalAmount);
-
-      return updatedCart;
-    });
-  };
-
-  const decreaseQuantity = (id) => {
-    setCartItems((prevItems) => {
-      const updatedCart = prevItems.map(item => {
-        if (item.id === id && item.quantity > 1) {
-          return { ...item, quantity: item.quantity - 1 };
-        }
-        return item;
-      }).filter(item => item.quantity > 0);
-
-      const newTotalItems = updatedCart.reduce((total, currentItem) => total + currentItem.quantity, 0);
-      const newTotalAmount = updatedCart.reduce((total, currentItem) => total + currentItem.price * currentItem.quantity, 0);
-
-      setNumberOfItems(newTotalItems);
-      setTotalAmount(newTotalAmount);
-
-      return updatedCart;
-    });
+    } catch (error) {
+      console.error('Error removing item:', error);
+    }
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, numberOfItems, totalAmount, addCartItem, removeCartItem, increaseQuantity, decreaseQuantity }}>
+    <CartContext.Provider value={{ cartItems, totalAmount, addCartItem, removeCartItem }}>
       {children}
     </CartContext.Provider>
   );

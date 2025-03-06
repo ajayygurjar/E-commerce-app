@@ -36,6 +36,18 @@ const productsArr = [
 const ProductPage = () => {
   const { addCartItem } = useContext(CartContext);
 
+  const handleAddCart=(item)=>{
+    const cartItem = {
+      id: item.id, 
+      title: item.title,
+      price: item.price,
+      imageUrl: item.imageUrl,
+      quantity: 1,
+    };
+    addCartItem(cartItem); };
+
+
+
   return (
     <Container>
       <Row>
@@ -55,7 +67,7 @@ const ProductPage = () => {
                   variant="primary"
                   type="button"
                   size='sm'
-                  onClick={() => addCartItem({ ...item, quantity: 1 })}
+                  onClick={() => handleAddCart(item)}
                 >
                   Add to Cart
                 </Button>

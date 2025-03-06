@@ -5,13 +5,17 @@ import useCartDisplay from '../../store/cart-display-context';
 import CartModal from './CartModal';
 
 const Cart = () => {
-  const { cartItems, removeCartItem, numberOfItems, increaseQuantity, decreaseQuantity, totalAmount } = useContext(CartContext);
+  const { cartItems, removeCartItem,  totalAmount } = useContext(CartContext);
   const { cartDisplay, toggleCartVisibility } = useCartDisplay();
+
+  const totalItems = cartItems.reduce((acc, curr) => {
+		return acc + curr.quantity;
+	}, 0);
 
   return (
     <>
       <Button variant="outline-secondary" onClick={() => toggleCartVisibility(!cartDisplay)}>
-        Cart <span>{numberOfItems}</span>
+        Cart <span>{totalItems}</span>
       </Button>
 
       <CartModal
@@ -19,8 +23,6 @@ const Cart = () => {
         toggleCartVisibility={toggleCartVisibility}
         cartItems={cartItems}
         removeCartItem={removeCartItem}
-        increaseQuantity={increaseQuantity}
-        decreaseQuantity={decreaseQuantity}
         totalAmount={totalAmount}
       />
     </>

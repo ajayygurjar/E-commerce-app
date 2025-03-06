@@ -3,7 +3,7 @@
 import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
 import CartItem from './CartItem';
 
-const CartModal = ({ cartDisplay, toggleCartVisibility, cartItems, removeCartItem, increaseQuantity, decreaseQuantity, totalAmount }) => {
+const CartModal = ({ cartDisplay, toggleCartVisibility, cartItems, removeCartItem,  totalAmount }) => {
   return (
     <Modal show={cartDisplay} onHide={() => toggleCartVisibility(false)} size="lg">
       <Modal.Header closeButton>
@@ -14,7 +14,7 @@ const CartModal = ({ cartDisplay, toggleCartVisibility, cartItems, removeCartIte
           <Row>
             {cartItems.map((item, index) => (
               <Col key={index} md={4} className="mb-4">
-                <CartItem item={item} removeCartItem={removeCartItem} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />
+                <CartItem item={item} removeCartItem={removeCartItem}  />
               </Col>
             ))}
           </Row>
