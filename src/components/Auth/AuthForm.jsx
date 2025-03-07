@@ -3,6 +3,11 @@ import {useNavigate} from 'react-router-dom'
 import classes from './AuthForm.module.css';
 import AuthContext from '../../store/auth-context';
 
+
+const API_Key='AIzaSyA9oMqGYDUx0KYIJvCuWZ1p0iGTl0WwazE';
+const SignUp_Url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='
+const SignIn_url=`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=`
+
 const AuthForm = () => {
 
   const navigate=useNavigate()
@@ -29,9 +34,9 @@ const AuthForm = () => {
     let url;
 
     if (isLogin) {
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA9oMqGYDUx0KYIJvCuWZ1p0iGTl0WwazE';
+      url = `${SignIn_url}${API_Key}`
     } else {
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA9oMqGYDUx0KYIJvCuWZ1p0iGTl0WwazE';
+      url = `${SignUp_Url}${API_Key}`
     }
 
     fetch(url, {

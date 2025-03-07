@@ -5,48 +5,63 @@ import axios from 'axios';
 
 export const CartContext = createContext();
 
-const API_URL = `https://crudcrud.com/api/b043858422b64f0582adeee615123825/cart`;
+const API_URL = `https://authentication-617b8-default-rtdb.asia-southeast1.firebasedatabase.app/userCart`;
+let cleanMail = `.not@log-in`;
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const { isLoggedIn, userMail } = useContext(AuthContext);
+  const { isLoggedIn, userMail,token } = useContext(AuthContext);
+
+
+  if (isLoggedIn) {
+		cleanMail = userMail.split(/[@.]/).join('');
+    //console.log(cleanMail)
+	}
 
   const addCartItem = async (item) => {
-    const cleanMail = await userMail.replace(/[@.]/g, '');  
-    const cartURL = `${API_URL}${cleanMail}`;
+    //console.log('Adding item to cart:', item); 
+		// console.log(cartItems);
+		const updateItem = cartItems.find((data) => data.product_id === item.product_id);
 
-    try {
-      const getItemResponse = await axios.get(cartURL);
-      const updateItem = getItemResponse.data.find((data) => data.id === item.id);
+		 //console.log('check updated items ',updateItem);
 
-      if (updateItem) {
-        const putItemResponse = await axios.put(`${cartURL}/${updateItem._id}`, {
-          ...item,
-          quantity: updateItem.quantity + item.quantity,
-        });
+		try {
+			if (!updateItem) {
+			//console.log('check updated item',updateItem)
+				const response = await axios.post(`${API_URL}/${cleanMail}.json?auth=${token}`, item);
+				 console.log(response);
+				console.log(response.status, response.statusText, 'Item POST Success');
+				// Update Cart State...
+				setCartItems((prevCart) => [...prevCart, { ...item, id: response.data.name }]);
+			} else {
+				// Update Item quantity in Firebase rtdb Using PATCH
+				const response = await axios.patch(
+					`${API_URL}/${cleanMail}/${updateItem.id}.json?auth=${token}`,
+					{
+						quantity: updateItem.quantity + item.quantity,
+					}
+				);
+				// console.log(response);
+				console.log(response.status, response.statusText, 'Item Update Success');
+				// Update Item quantity in Cart State...
+				setCartItems((prevCart) => {
+					return prevCart.map((prevItem) =>
+						prevItem.id === updateItem.id
+							? { ...prevItem, quantity: prevItem.quantity + item.quantity }
+							: prevItem
+					);
+				});
+			}
+		} catch (error) {
+			console.log(error);
+			console.log(error.message);
+		}
 
-        console.log(putItemResponse.statusText, 'Item Update Success');
-        setCartItems((prevCart) =>
-          prevCart.map((prevItem) =>
-            prevItem.id === updateItem.id
-              ? { ...prevItem, quantity: prevItem.quantity + item.quantity }
-              : prevItem
-          )
-        );
-      } else {
-        const postItemResponse = await axios.post(cartURL, item);
-        console.log(postItemResponse.data, postItemResponse.status, 'Item POST Success');
-        setCartItems((prevCart) => [...prevCart, postItemResponse.data]);
-      }
-
-      setTotalAmount((prevTotal) => prevTotal + item.quantity * item.price);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
+		setTotalAmount((prevTotal) => prevTotal + item.quantity * item.price);
+	};
+ /* 
+ useEffect(() => {
     if (isLoggedIn && userMail) {
       const fetchCart = async () => {
         const cleanMail = await userMail.replace(/[@.]/g, '');
@@ -67,6 +82,9 @@ export const CartProvider = ({ children }) => {
       fetchCart();
     }
   }, [userMail, isLoggedIn]);
+*/
+
+
 
   const removeCartItem = async (id) => {
     const cleanMail = await userMail.replace(/[@.]/g, '');  

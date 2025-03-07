@@ -37,7 +37,7 @@ export const AuthContextProvider=(props)=>{
         if(userIsLoggedIn){
             const timer=setTimeout(()=>{
                 logoutHandler();
-            },300000);
+            },30000000);
             return ()=>{
                 clearTimeout(timer)
             }

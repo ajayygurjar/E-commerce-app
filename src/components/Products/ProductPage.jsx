@@ -37,8 +37,9 @@ const ProductPage = () => {
   const { addCartItem } = useContext(CartContext);
 
   const handleAddCart=(item)=>{
+    //console.log(item)
     const cartItem = {
-      id: item.id, 
+      product_id: item.id, 
       title: item.title,
       price: item.price,
       imageUrl: item.imageUrl,
