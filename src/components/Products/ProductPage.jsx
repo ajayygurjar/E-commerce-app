@@ -39,7 +39,7 @@ const ProductPage = () => {
   const handleAddCart=(item)=>{
     //console.log(item)
     const cartItem = {
-      product_id: item.id, 
+      product_id:`${item.id}-${item.title}`, 
       title: item.title,
       price: item.price,
       imageUrl: item.imageUrl,
