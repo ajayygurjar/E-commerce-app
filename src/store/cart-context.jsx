@@ -60,29 +60,33 @@ export const CartProvider = ({ children }) => {
 
 		setTotalAmount((prevTotal) => prevTotal + item.quantity * item.price);
 	};
- /* 
+ 
  useEffect(() => {
-    if (isLoggedIn && userMail) {
-      const fetchCart = async () => {
-        const cleanMail = await userMail.replace(/[@.]/g, '');
-        const cartURL = `${API_URL}${cleanMail}`;
-
-        try {
-          const getItemResponse = await axios.get(cartURL);
-          setCartItems(getItemResponse.data);
-
-          setTotalAmount(
-            getItemResponse.data.reduce((acc, curr) => acc + curr.quantity * curr.price, 0)
-          );
-        } catch (error) {
-          console.error('Error fetching cart:', error);
-        }
-      };
-
-      fetchCart();
-    }
-  }, [userMail, isLoggedIn]);
-*/
+		const fetchUserCart = async () => {
+			if (token && isLoggedIn) {
+				try {
+					const response = await axios.get(`${API_URL}/${cleanMail}.json?auth=${token}`);
+					if (response.status === 200) {
+						const loggedInUserCart = Object.keys(response.data).map((key) => {
+							return { ...response.data[key], id: key.toString() };
+						});
+						//console.log(loggedInUserCart);
+						setCartItems(loggedInUserCart);
+						setTotalAmount(() => {
+							return loggedInUserCart.reduce((acc, curr) => {
+								return acc + curr.quantity * curr.price;
+							}, 0);
+						});
+					}
+				} catch (error) {
+					console.log(error);
+				}
+			}
+		};
+		if (isLoggedIn) {
+			fetchUserCart();
+		}
+	}, [isLoggedIn, token]);
 
 
 
