@@ -1,3 +1,4 @@
+import { Container,Card,Button,Row,Col } from "react-bootstrap"
 
 
 
@@ -18,18 +19,25 @@ const tourData=[
 
 const Home = () => {
 	return <>
-    <section>
-        <h2 className="text-center mt-4">Tour</h2>
-        {tourData.map((tour,index)=>(<div key={index} className="text-center">
-            <span>{tour.date}</span>
-            <span>{tour.city}</span>
-            <span>{tour.venue}</span>
-            <button type="click">Buy Tickets</button>
+      <Container>
+                <h2 className="text-center mt-4">Tour</h2>
+                <Row className="g-4">
+        {tourData.map((tour,index)=>(
+            <Col key={index} xs={12} md={6} lg={4}>
+             <Card className="text-center shadow-sm">
+                <Card.Body>
+            <Card.Text>{tour.date}</Card.Text>
+            <Card.Text>{tour.city}</Card.Text>
+            <Card.Text>{tour.venue}</Card.Text>
+            <Button type="click" variant="warning">Buy Tickets</Button>
             <hr></hr>
-
-        </div>
+            </Card.Body>
+        </Card>
+        </Col>
     ))}
-    </section>
+    </Row>
+    
+    </Container>
     </>
 };
 export default Home;

@@ -2,7 +2,7 @@
 
 
 
-import AuthForm from "../components/Auth/AuthForm";
+import AuthForm from "./AuthForm";
 
 
 const LoginPage=()=>{

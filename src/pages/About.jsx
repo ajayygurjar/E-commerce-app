@@ -1,13 +1,16 @@
-
+import { Container, Row, Col, Card } from 'react-bootstrap';
 
 const About = () => {
 	return (
-		<div>
-			<section id="about">
-				<h2>About</h2>
-				<div>
+		
+			<Container  id="about" className='py-5'>
+				<h2 className='text-center mb-4'>About</h2>
+				<Row>
 					
-					<p>
+					<Col xs={12} md={8} className='mx-auto'>
+					<Card className='shadow-sm'>
+						<Card.Body>
+							<Card.Text>
 						Lorem ipsum carrots enhanced rebates. Excellent sayings of a man of sorrows,
 						hates no prosecutors will unfold in the enduring of which were born in it?
 						Often leads smallest mistake some pain main responsibilities are to stand for
@@ -28,10 +31,12 @@ const About = () => {
 						however, have any! Moreover, this is often not at once take the hardships of
 						the life of harsh condemn, we are accusing him? Him whom something large
 						cisterns.
-					</p>
-				</div>
-			</section>
-		</div>
+						</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
 	);
 };
 export default About;

@@ -64,10 +64,12 @@ const ProductPage = () => {
                 <Link to={`/product/${item.id}`}>
                 <Button variant='warning' size='sm'>View Product</Button>
                 </Link>
+                
                 <Button
                   variant="primary"
                   type="button"
                   size='sm'
+                  
                   onClick={() => handleAddCart(item)}
                 >
                   Add to Cart

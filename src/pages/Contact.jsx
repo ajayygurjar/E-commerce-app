@@ -1,9 +1,7 @@
-
-
-
-
-
 import  { useState } from 'react';
+
+
+import { Container,Button,Form, Col, Row } from 'react-bootstrap';
 
 const API_URL =
 	'https://react-http-ffc12-default-rtdb.firebaseio.com/userContacts';
@@ -53,17 +51,14 @@ const Contact = () => {
 	};
 
 	return (
-		<section >
-			<h2 >Contact US</h2>
-			<form
-				onSubmit={handleSubmit}
+		<Container className='py-5'>
+			<h2 className='text-center mb-4' >Contact US</h2>
+			<Row className='justify-content-center'>
+				<Col md={6}>
+			<Form onSubmit={handleSubmit}>
 				
-			>
-				<div >
-					<label htmlFor="name">
-						Name
-					</label>
-					<input
+					<Form.Label htmlFor="name">Name</Form.Label>
+					<Form.Control
 						type="text"
 						id="name"
 						name="name"
@@ -73,13 +68,11 @@ const Contact = () => {
 						required
 						autoFocus
 					/>
-				</div>
+				
 
-				<div>
-					<label htmlFor="email" >
-						Email
-					</label>
-					<input
+				
+					<Form.Label htmlFor="email" >Email</Form.Label>
+					<Form.Control
 						type="email"
 						id="email"
 						name="email"
@@ -88,13 +81,13 @@ const Contact = () => {
 						placeholder="Enter your email"
 						required
 					/>
-				</div>
+				
 
-				<div >
-					<label htmlFor="phone" >
+				
+					<Form.Label htmlFor="phone" >
 						Phone Number
-					</label>
-					<input
+					</Form.Label>
+					<Form.Control
 						type="tel"
 						id="phone"
 						name="phone"
@@ -103,13 +96,15 @@ const Contact = () => {
 						placeholder="Enter your phone number"
 						required
 					/>
-				</div>
+				
 
-				<button type="submit">
+				<Button variant='primary' className='mt-2 ' type="submit">
 					Submit
-				</button>
-			</form>
-		</section>
+				</Button>
+			</Form>
+			</Col>
+			</Row>
+		</Container>
 	);
 };
 

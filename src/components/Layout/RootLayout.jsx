@@ -5,17 +5,18 @@ import Footer from './Footer';
 
 function RootLayout() {
   return (
-    <div>
+    <div style={{  display: 'flex', flexDirection: 'column', height:'100vh' }}>
       
       <Header />
 
-      <main>
+      <main style={{ flex: 1 }}>
        {/* This is where child routes will be rendered */}
         <Outlet />
       </main>
 
-      
-      <Footer />
+      <footer style={{ marginTop: 'auto' }}>
+      <Footer  />
+      </footer>
     </div>
   );
 }

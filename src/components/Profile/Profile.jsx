@@ -3,6 +3,7 @@ import classes from "./Profile.module.css";
 import { useNavigate } from "react-router-dom";
 
 import AuthContext from "../../store/auth-context";
+import { Container } from "react-bootstrap";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -36,6 +37,8 @@ const Profile = () => {
   };
 
   return (
+    <Container>
+      <h2 className="mt-4 text-center">Change your Password</h2>
     <form className={classes.form} onSubmit={submitHandler}>
       <div className={classes.control}>
         <label htmlFor="new-password">New Password</label>
@@ -50,6 +53,7 @@ const Profile = () => {
         <button>Change Password</button>
       </div>
     </form>
+    </Container>
   );
 };
 
